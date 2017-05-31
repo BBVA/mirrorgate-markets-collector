@@ -1,4 +1,4 @@
-const CommentsService = require('./service/CommentsService');
+const CommentsService = require('./src/service/CommentsService');
 
 var service = new CommentsService();
 
