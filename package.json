@@ -1,0 +1,14 @@
+{
+  "name": "mirrorgate-google-play-collector",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Enrique Daimiel <enrique.daimiel@bbva.com>",
+  "license": "",
+  "dependencies": {
+    "google-play-scraper": "^3.3.1"
+  }
+}
