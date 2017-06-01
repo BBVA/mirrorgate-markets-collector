@@ -2,16 +2,25 @@ const CommentsService = require('./src/service/CommentsService');
 
 var service = new CommentsService();
 
-service.getGooglePlayComments((reviews) => {
-  service.sendComments(reviews, (err, res, body) => {
+/* Run as Lambda fucntion */
+exports.handler = (event, context, callback) => {
+  return start();
+};
+
+function start() {
+  service.getGooglePlayComments((err, reviews) => {
     if (err) {
-      console.error(err);
-      process.exit(1);
+      return console.error(err);
     }
-    console.log(res);
-    process.exit(0);
+    service.sendComments(reviews, (err, res, body) => {
+      if (err) {
+        return console.error(err);
+      }
+      return console.log(body);
+    });
   });
-});
 
+}
 
-
+/* Run as local funciont */
+return start();
