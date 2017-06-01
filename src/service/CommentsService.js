@@ -9,17 +9,21 @@ function CommentsService() {
    
   this.getGooglePlayComments = function(cb){
     
-    caller.getListOfApps((apps) => {
+    return caller.getListOfApps((err, apps) => {
       
+      if(err) {
+        return cb(err);
+      }
+
       apps.forEach((app) => {
         gpCaller.getReviews(app, cb);
       });
-      
+      return;
     });
   };
   
   this.sendComments = function(reviews, cb) {
-    caller.sendReviewsToBackend(reviews, cb);
+    return caller.sendReviewsToBackend(reviews, cb);
   };
 
 }

@@ -6,13 +6,15 @@ const ReviewDTO = require('../dto/ReviewDTO');
 function GooglePlayCaller() {
 
   this.getReviews = function(app, cb){
-    gplay.reviews({  
+    
+    return gplay.reviews({  
       appId: app.appId,
       page: 0,
       sort: gplay.sort.NEWEST
     }).then((resolve, err) => {
+      
       if(err) {
-        return console.error(error);
+        return cb(err);
       }
       
       var reviews = [];
@@ -21,11 +23,9 @@ function GooglePlayCaller() {
         var review = new ReviewDTO(data);
         reviews.push(review);
       });
-      
-      cb(reviews);
+      return cb(null, reviews);
     });
   };
 }
-
 
 module.exports = GooglePlayCaller;

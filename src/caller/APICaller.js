@@ -11,19 +11,19 @@ function APICaller() {
   
   
   this.getListOfApps = function(cb){
-    request(config.mirrorgate_applist_url, (err, response, body) => {
+    return request(config.mirrorgate_applist_url, (err, response, body) => {
       if(err) {
-        return console.error(error);
+        return cb(err);
       }
       
       var apps = JSON.parse(body);
       var androidApps = apps.filter(filterByPlatformAndroid);
-      cb(androidApps);
+      return cb(null, androidApps);
     });
   };
   
   this.sendReviewsToBackend = function(reviews, cb){
-    request({
+    return request({
       url: config.mirrorgate_reviews_url,
       method: 'POST',
       headers: {
