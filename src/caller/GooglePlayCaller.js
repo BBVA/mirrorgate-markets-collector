@@ -2,12 +2,11 @@ const request = require('request');
 const gplay = require('google-play-scraper');
 const ReviewDTO = require('../dto/ReviewDTO');
 
-
 function GooglePlayCaller() {
-
+  
   this.getReviews = function(app, cb){
     
-    return gplay.reviews({  
+    gplay.reviews({  
       appId: app.appId,
       page: 0,
       sort: gplay.sort.NEWEST
@@ -23,7 +22,7 @@ function GooglePlayCaller() {
         var review = new ReviewDTO(data);
         reviews.push(review);
       });
-      return cb(null, reviews);
+      cb(null, reviews);
     });
   };
 }
