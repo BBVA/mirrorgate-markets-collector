@@ -6,6 +6,11 @@ function GooglePlayCaller() {
   
   this.getReviews = function(app, cb){
     
+    if(!app.appId) {
+      console.error('Wrong app Id');
+      return;
+    }
+    
     gplay.reviews({  
       appId: app.appId,
       page: 0,
