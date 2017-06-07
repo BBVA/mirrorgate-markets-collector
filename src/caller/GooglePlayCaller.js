@@ -4,36 +4,36 @@ const ReviewDTO = require('../dto/ReviewDTO');
 
 function GooglePlayCaller() {
   
-  this.getReviews = function(app, cb){
+  this.getReviews = function(app){
     
-    if(!app.appId) {
-      console.error('Wrong app Id');
-      return;
-    }
-    
-    gplay.reviews({  
-      appId: app.appId,
-      page: 0,
-      sort: gplay.sort.NEWEST
-    }).then((resolve, err) => {
+    return new Promise( (resolve, reject) => {
       
-      if(err) {
-        return cb(err);
+      if(!app.appId) {
+        return reject('Wrong app Id');
       }
       
-      var reviews = [];
-      
-      resolve.every((data) => {
+      gplay.reviews({  
+        appId: app.appId,
+        page: 0,
+        sort: gplay.sort.NEWEST
+      }).then((res) => {
+        var reviews = [];
+        
+        res.every((data) => {
 
-        if(app.commentId === data.id) {
-          return false;
-        }
-        var review = new ReviewDTO(data);
-        review.setAppName(app.appName);
-        reviews.push(review);
-        return true;
-      });
-      cb(null, reviews);
+          if(app.commentId === data.id) {
+            return false;
+          }
+          var review = new ReviewDTO(data);
+          review.setAppName(app.appName);
+          reviews.push(review);
+          return true;
+        });
+        resolve(reviews);
+      })
+      .catch( (err) => {
+        reject('err');
+      });  
     });
   };
 }

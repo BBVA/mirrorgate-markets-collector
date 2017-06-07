@@ -5,24 +5,44 @@ const GooglePlayCaller = require('../caller/GooglePlayCaller');
 var caller = new APICaller();
 var gpCaller = new GooglePlayCaller();
 
-function CommentsService() { 
+function CommentsService() {  
    
-  this.getGooglePlayComments = function(cb){
+  this.getGooglePlayComments = function(){
+    
+    return new Promise((resolve, reject) => {
+      
+      caller
+        .getListOfApps()
+        .then( (apps) => {
 
-    caller.getListOfApps((err, apps) => {
+          allReviews = [];
 
-      if(err) {
-        return cb(err);
-      }
-
-      apps.forEach((app) => {
-        gpCaller.getReviews(app, cb);
-      });
+          count=0;
+          apps.forEach((app) => {
+          
+            gpCaller
+              .getReviews(app)
+              .then((reviews) => {
+                  allReviews.push.apply(allReviews, reviews);
+                  count++;
+                  if(count === apps.length) {
+                    resolve(allReviews);
+                  }
+                }
+              ).catch( (err) => {
+                console.log(err);
+              });
+          });
+          
+        })
+        .catch( (err) => {
+          reject(err);
+        });
     });
   };
   
-  this.sendComments = function(reviews, cb) {
-    caller.sendReviewsToBackend(reviews, cb);
+  this.sendComments = function(reviews) {
+    return caller.sendReviewsToBackend(reviews);
   };
 
 }

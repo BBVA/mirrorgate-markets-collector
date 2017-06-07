@@ -2,28 +2,34 @@ const CommentsService = require('./src/service/CommentsService');
 
 var service = new CommentsService();
 
-function start() {
-  
-  return service.getGooglePlayComments((err, reviews) => {
-    if (err) {
-      return console.error(err);
-    }
-    
-    service.sendComments(reviews, (err, res, body) => {
-      if (err) {
-        return console.error(err);
-      }
-      
-      console.log(body);
+function run() {  
+  return service
+    .getGooglePlayComments()
+    .then( (reviews) => {
+      return service
+        .sendComments(reviews);
     });
-  });
-
 }
 
 /* Run as Lambda fucntion */
 exports.handler = (event, context, callback) => {
-  return start();
+  run()
+    .then( (res) => {
+      console.log(res);
+      callback(null, res);
+    })
+    .catch( (err) => {
+      callback(err); // Echo back the first key value
+    });
 };
 
 /* Run as local funciont */
-return start();
+run()
+  .then( (res) => {
+    console.log(res);
+    process.exit(0);
+  })
+  .catch( (err) => {
+    console.log(err);
+    process.exit(1);
+  });
