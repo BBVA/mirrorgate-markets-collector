@@ -23,9 +23,15 @@ function GooglePlayCaller() {
       
       var reviews = [];
       
-      resolve.forEach((data) => {
+      resolve.every((data) => {
+
+        if(app.commentId === data.id) {
+          return false;
+        }
         var review = new ReviewDTO(data);
+        review.setAppName(app.appName);
         reviews.push(review);
+        return true;
       });
       cb(null, reviews);
     });

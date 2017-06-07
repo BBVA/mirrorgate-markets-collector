@@ -22,6 +22,12 @@ function ReviewDTO(data) {
   this.comment = data.text;
   this.platform = 'Android';
   this.commentTitle = data.title;
+  
+  
+  this.setAppName = function(appName) {
+    this.appname = appName;
+  };
+  
 }
 
 module.exports = ReviewDTO;
