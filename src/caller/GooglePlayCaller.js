@@ -17,6 +17,7 @@ function GooglePlayCaller() {
         page: 0,
         sort: gplay.sort.NEWEST
       }).then((res) => {
+    
         var reviews = [];
         
         res.every((data) => {
@@ -32,7 +33,7 @@ function GooglePlayCaller() {
         resolve(reviews);
       })
       .catch( (err) => {
-        reject('err');
+        reject(err);
       });  
     });
   };

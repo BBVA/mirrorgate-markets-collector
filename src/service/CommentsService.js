@@ -30,7 +30,11 @@ function CommentsService() {
                   }
                 }
               ).catch( (err) => {
-                console.log(err);
+                console.error(err);
+                count++;
+                if(count === apps.length) {
+                  resolve(allReviews);
+                }
               });
           });
           
