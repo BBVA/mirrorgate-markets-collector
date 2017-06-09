@@ -18,7 +18,7 @@ function ReviewDTO(data) {
   this.commentId = data.id;
   this.timestamp = (new Date(data.date)).getTime();
   this.authorName = data.userName;
-  this.starRating = data.score;
+  this.starrating = data.score;
   this.comment = data.text;
   this.platform = 'Android';
   this.commentTitle = data.title;
