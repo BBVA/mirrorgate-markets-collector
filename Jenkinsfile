@@ -18,7 +18,7 @@ node ('global') {
         
         stage('Package Zip') {
             sh """
-                docker-compose -p \${BUILD_TAG} run -u \$(id -u) pacakge
+                docker-compose -p \${BUILD_TAG} run -u \$(id -u) package
             """
         }
 
