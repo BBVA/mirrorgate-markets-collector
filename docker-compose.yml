@@ -2,14 +2,14 @@ version: '2'
 
 services:
   install:
-      image: "node:6-slim"
+      image: "node:7-slim"
       volumes:
         - .:/tmp/repo
         - ~/.npmrc:/tmp/repo/.npmrc
       working_dir: "/tmp/repo"
       command: "npm install"
   package:
-      image: "node:8-slim"
+      image: "node:7-slim"
       volumes:
         - .:/tmp/repo
         - ~/.npmrc:/tmp/repo/.npmrc
