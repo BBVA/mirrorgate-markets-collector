@@ -12,13 +12,13 @@ node ('global') {
 
         stage('Build') {
             sh """
-                npm install
+                docker-compose -p \${BUILD_TAG} run -u \$(id -u) install
             """
         }
         
         stage('Package Zip') {
             sh """
-                ./node_modules/gulp/bin/gulp.js package
+                docker-compose -p \${BUILD_TAG} run -u \$(id -u) pacakge
             """
         }
 
