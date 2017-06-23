@@ -15,8 +15,20 @@
  */
 
 function ReviewDTO(data) {
+  //Educated guess as time is not comming from the source
+  var now = new Date();
+  var date = new Date(data.date);
+
+  this.timestamp = (new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    now.getHours(),
+    now.getMinutes(),
+    now.getSeconds()
+  )).getTime();
+
   this.commentId = data.id;
-  this.timestamp = (new Date(data.date)).getTime();
   this.authorName = data.userName;
   this.starrating = data.score;
   this.comment = data.text;
