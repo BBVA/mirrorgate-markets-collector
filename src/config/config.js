@@ -14,14 +14,9 @@
  * limitations under the License.
  */
 
-function ReviewDTO(data) {
-  this.commentId = data.id;
-  this.timestamp = (new Date(data.date)).getTime();
-  this.authorName = data.userName;
-  this.starRating = data.score;
-  this.comment = data.text;
-  this.platform = 'Android';
-  this.commentTitle = data.title;
-}
+var config = {
+  mirrorgate_reviews_url: process.env.MIRRORGATE_REVIEWS_URL || 'http://localhost:8080/mirrorgate/api/reviews',
+  mirrorgate_applist_url: process.env.MIRRORGATE_APPLIST_URL || 'http://localhost:8080/mirrorgate/api/applications'
+};
 
-module.exports = ReviewDTO;
+module.exports = config;  

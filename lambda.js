@@ -14,32 +14,36 @@
  * limitations under the License.
  */
 
-/* Run as local funtcion */
+/* Run as Lambda fucntion */
 
 const CommentsService = require('./src/service/CommentsService');
 
 var service = new CommentsService();
 
-service
-  .getGooglePlayComments()
-  .then( (reviews) => {
-    if(reviews.length > 0){   
-      service
-        .sendComments(reviews)
-        .then( (res) => {
-          console.log(res);
-          process.exit(0);
-        })
-        .catch( (err) => {
-          console.log(err);
-          process.exit(1);
-        });
-    } else {
-      console.log('There are not comments to send');
-      process.exit(0);
-    }
-  })
-  .catch( (err) => {
-    console.log(err);
-    process.exit(1);
-  });
+exports.handler = (event, context, callback) =>  {
+  
+  context.callbackWaitsForEmptyEventLoop = false;
+
+  service
+    .getGooglePlayComments()
+    .then( (reviews) => {
+      if(reviews.length > 0){   
+        service
+          .sendComments(reviews)
+          .then( (res) => {
+            console.log(res);
+            callback(null, res);
+          })
+          .catch( (err) => {
+            callback(err);
+          });
+      } else {
+        console.log('There are not comments to send');
+        callback(null, 'There are not comments to send');
+      }
+    })
+    .catch( (err) => {
+      callback(err);
+    });
+
+};

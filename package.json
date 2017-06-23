@@ -4,11 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "package": "./node_modules/gulp/bin/gulp.js package",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Enrique Daimiel <enrique.daimiel@bbva.com>",
   "license": "",
   "dependencies": {
     "google-play-scraper": "^3.3.1"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-zip": "^4.0.0"
   }
 }

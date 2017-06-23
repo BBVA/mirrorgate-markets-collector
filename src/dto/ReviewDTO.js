@@ -14,32 +14,32 @@
  * limitations under the License.
  */
 
-/* Run as local funtcion */
+function ReviewDTO(data) {
+  //Educated guess as time is not comming from the source
+  var now = new Date();
+  var date = new Date(data.date);
 
-const CommentsService = require('./src/service/CommentsService');
+  this.timestamp = (new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    now.getHours(),
+    now.getMinutes(),
+    now.getSeconds()
+  )).getTime();
 
-var service = new CommentsService();
+  this.commentId = data.id;
+  this.authorName = data.userName;
+  this.starrating = data.score;
+  this.comment = data.text;
+  this.platform = 'Android';
+  this.commentTitle = data.title;
+  
+  
+  this.setAppName = function(appName) {
+    this.appname = appName;
+  };
+  
+}
 
-service
-  .getGooglePlayComments()
-  .then( (reviews) => {
-    if(reviews.length > 0){   
-      service
-        .sendComments(reviews)
-        .then( (res) => {
-          console.log(res);
-          process.exit(0);
-        })
-        .catch( (err) => {
-          console.log(err);
-          process.exit(1);
-        });
-    } else {
-      console.log('There are not comments to send');
-      process.exit(0);
-    }
-  })
-  .catch( (err) => {
-    console.log(err);
-    process.exit(1);
-  });
+module.exports = ReviewDTO;
