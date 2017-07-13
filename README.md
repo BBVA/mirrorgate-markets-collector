@@ -20,6 +20,12 @@ If not, default endpoints defined in properties will be used.
 mirrorgate_reviews_url = 'http://localhost:8080/mirrorgate/api/reviews',
 mirrorgate_applist_url = 'http://localhost:8080/mirrorgate/api/applications'
 ```
+
+## Languaje
+
+By default comments are collected in english and spanish. If you want to change the lang list set the `MIRRORGATE_LANG_LIST` environment variable to
+a comma separated list of two letter lang references (i.e. `fr,es,en`)
+
 # Usage
 
 First install dependencies

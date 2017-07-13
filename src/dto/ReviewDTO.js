@@ -28,6 +28,10 @@ function ReviewDTO(data) {
     now.getSeconds()
   )).getTime();
 
+  if(!this.timestamp) {
+    this.timestamp = now.getTime();
+  }
+
   this.commentId = data.id;
   this.authorName = data.userName;
   this.starrating = data.score;

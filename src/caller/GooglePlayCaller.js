@@ -17,36 +17,47 @@
 const request = require('request');
 const gplay = require('google-play-scraper');
 const ReviewDTO = require('../dto/ReviewDTO');
+const config = require('../config/config');
 
 function GooglePlayCaller() {
   
   this.getReviews = function(app){
-    
-    return new Promise( (resolve, reject) => {
-      
-      if(!app.appId) {
-        return reject('Wrong app Id');
-      }
-      
-      gplay.reviews({  
-        appId: app.appId,
-        page: 0,
-        sort: gplay.sort.NEWEST
-      }).then((res) => {
-        var reviews = [];
-        
-        res.every((data) => {
+          
+    if(!app.appId) {
+      return reject('Wrong app Id');
+    }
 
-          if(app.commentId === data.id) {
-            return false;
-          }
-          var review = new ReviewDTO(data);
-          review.setAppName(app.appName);
+    return Promise.all(config.mirrorgate_langs.map(function(lang) {
+      return new Promise( (resolve, reject) => {
+        gplay.reviews({  
+          appId: app.appId,
+          page: 0,
+          sort: gplay.sort.NEWEST,
+          lang: lang
+        }).then((res) => {
+          var reviews = [];
+          
+          res.every((data) => {
+
+            if(app.commentId === data.id) {
+              return false;
+            }
+            var review = new ReviewDTO(data);
+            review.setAppName(app.appName);
+            reviews.push(review);
+            return true;
+          });
+          resolve(reviews);
+        }).catch(reject);
+      });
+    })).then((langReviews) => {
+      var reviews = [];
+      langReviews.forEach(function(langReviews) {
+        langReviews.forEach(function(review) {
           reviews.push(review);
-          return true;
         });
-        resolve(reviews);
-      }).catch(reject);
+      });
+      return reviews;
     });
   };
 }
