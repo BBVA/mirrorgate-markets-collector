@@ -28,7 +28,7 @@ service
   .getGooglePlayComments()
   .then( (reviews) => {
     reviews = reviews && reviews.reduce((reviewsForApp, list) => {
-      return reviewsForApp.reduce((review, list) => {return list.push(review);}, list);
+      return reviewsForApp.reduce((review, list) => {list.push(review); return list;}, list);
     }, []);
     if(reviews && reviews.length > 0){
       
