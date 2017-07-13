@@ -26,11 +26,16 @@ exports.handler = (event, context, callback) =>  {
 
 service
   .getGooglePlayComments()
-  .then( (reviews) => {
-    reviews = reviews && reviews.reduce((reviewsForApp, list) => {
-      return reviewsForApp.reduce((review, list) => {list.push(review); return list;}, list);
-    }, []);
-    if(reviews && reviews.length > 0){
+  .then( (appsReviews) => {
+    let reviews = [];
+    if(appsReviews) {
+      appsReviews.forEach(function(appReviews) {
+        appReviews.forEach(function(review) {
+          reviews.push(review);
+        });        
+      });
+    }
+    if(reviews.length > 0){
       
       console.log('Comments found: ' + reviews.length);
       service
