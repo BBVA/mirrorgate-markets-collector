@@ -25,39 +25,26 @@ function CommentsService() {
    
   this.getGooglePlayComments = function(){
     
-    return new Promise((resolve, reject) => {
-      
-      caller
-        .getListOfApps()
-        .then( (apps) => {
+    return caller
+      .getListOfApps()
+      .then( (apps) => {
+        console.log('Processing apps: ' + JSON.stringify(apps));
 
-          allReviews = [];
-
-          count=0;
-          apps.forEach((app) => {
-          
-            gpCaller
+        return Promise.all(apps.map((app) => {
+          console.log('Collecting from: ' + JSON.stringify(app.appId))
+          return gpCaller
               .getReviews(app)
-              .then((reviews) => {
-                  allReviews.push.apply(allReviews, reviews);
-                  count++;
-                  if(count === apps.length) {
-                    resolve(allReviews);
-                  }
-                }
-              ).catch( (err) => {
+              .then((data) => {
+                console.log('Data collected from ' + app.appId);
+                return data;
+              })
+              .catch( (err) => {
+                console.error('Error collecting from ' + app.appId);
                 console.error(err);
-                count++;
-                if(count === apps.length) {
-                  resolve(allReviews);
-                }
+                return [];
               });
-          });
-          
-        })
-        .catch( (err) => {
-          reject(err);
-        });
+        }));
+
     });
   };
   

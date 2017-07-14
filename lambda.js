@@ -24,26 +24,38 @@ exports.handler = (event, context, callback) =>  {
   
   context.callbackWaitsForEmptyEventLoop = false;
 
-  service
-    .getGooglePlayComments()
-    .then( (reviews) => {
-      if(reviews.length > 0){   
-        service
-          .sendComments(reviews)
-          .then( (res) => {
-            console.log(res);
-            callback(null, res);
-          })
-          .catch( (err) => {
-            callback(err);
-          });
-      } else {
-        console.log('There are not comments to send');
-        callback(null, 'There are not comments to send');
-      }
-    })
-    .catch( (err) => {
-      callback(err);
-    });
+service
+  .getGooglePlayComments()
+  .then( (appsReviews) => {
+    let reviews = [];
+    if(appsReviews) {
+      appsReviews.forEach(function(appReviews) {
+        appReviews.forEach(function(review) {
+          reviews.push(review);
+        });        
+      });
+    }
+    if(reviews.length > 0){
+      
+      console.log('Comments found: ' + reviews.length);
+      service
+        .sendComments(reviews)
+        .then( (res) => {
+          console.log(res);
+          callback(null, res);
+        })
+        .catch( (err) => {
+          console.log(err);
+          callback(err);
+        });
+    } else {
+      console.log('There are not comments to send');
+      callback(null, 'There are not comments to send');
+    }
+  })
+  .catch( (err) => {
+    console.log(err);
+    callback(err);
+  });
 
 };

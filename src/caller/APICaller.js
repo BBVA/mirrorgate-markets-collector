@@ -19,12 +19,18 @@ const config = require('../config/config');
 
 function APICaller() {
 
-  function filterByPlatformAndroid(value) {
-    // TODO: return value.platform === 'Android';
-    return true;
-  }
   
   this.getListOfApps = function(){
+
+    let set = {};
+
+    function filterByPlatformAndroid(value) {
+      if(set[value.appId]) return false;
+      set[value.appId] = true;
+      return value.appId.indexOf('.') > 0;      
+      // TODO: return value.platform === 'Android';
+    }
+
 
     return new Promise((resolve, reject) => {
       request(config.mirrorgate_applist_url, (err, res, body) => {
