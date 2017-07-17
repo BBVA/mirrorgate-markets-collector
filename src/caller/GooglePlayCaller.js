@@ -20,6 +20,23 @@ const ReviewDTO = require('../dto/ReviewDTO');
 const config = require('../config/config');
 
 function GooglePlayCaller() {
+
+  this.getAppData = function(app){
+    if(!app.appId) {
+      return reject('Wrong app Id');
+    }
+
+    return gplay.app(
+      {appId: app.appId}
+    ).then((res) => {
+      return [{
+        appname: app.appName,
+        starrating: res.score,
+        platform: 'Android',
+        amount: res.reviews
+      }];
+    });
+  }
   
   this.getReviews = function(app){
           

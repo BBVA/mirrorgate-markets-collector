@@ -32,7 +32,19 @@ function CommentsService() {
 
         return Promise.all(apps.map((app) => {
           console.log('Collecting from: ' + JSON.stringify(app.appId))
-          return gpCaller
+          return Promise.all([
+            gpCaller
+              .getAppData(app)
+              .then((data) => {
+                console.log('App Data from ' + app.appId);
+                return data;
+              })
+              .catch( (err) => {
+                console.error('Error collecting app data from ' + app.appId);
+                console.error(err);
+                return [];
+              }),
+            gpCaller
               .getReviews(app)
               .then((data) => {
                 console.log('Data collected from ' + app.appId);
@@ -42,7 +54,10 @@ function CommentsService() {
                 console.error('Error collecting from ' + app.appId);
                 console.error(err);
                 return [];
-              });
+              }),              
+          ]).then((data) => {
+            return data.reduce((acum, data) => acum.concat(data || []),[]);
+          });
         }));
 
     });
