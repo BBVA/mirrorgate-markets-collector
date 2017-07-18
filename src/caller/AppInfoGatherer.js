@@ -81,7 +81,7 @@ module.exports = class AppInfoGatherer {
         .then(
             (langReviews) => langReviews.reduce(
                 (all, langReviews) =>
-                    langReviews.reduce((app, review) => all.push(review)),
+                    langReviews.reduce((all, review) => all.push(review) && all, all),
                 []));
   }
 }
