@@ -17,56 +17,65 @@
 const request = require('request');
 const config = require('../config/config');
 
-function APICaller() {
+let PLATFORMS = {android: 'Android', ios: 'IOS'};
 
-  
-  this.getListOfApps = function(){
+function APICaller() {
+  this.getListOfApps = function() {
 
     let set = {};
 
-    function filterByPlatformAndroid(value) {
-      if(set[value.appId]) return false;
-      set[value.appId] = true;
-      return value.appId.indexOf('.') > 0;      
-      // TODO: return value.platform === 'Android';
-    }
-
-
     return new Promise((resolve, reject) => {
       request(config.mirrorgate_applist_url, (err, res, body) => {
-        
-        if(err) {
+
+        if (err) {
           return reject(err);
         }
-        
-        var apps = JSON.parse(body);
-        var androidApps = apps.filter(filterByPlatformAndroid);
-        resolve(androidApps);
+
+        resolve(JSON.parse(body)
+                    .map(
+                        (app) => {
+                          var parts = app.appId.split('/');
+                          if (PLATFORMS[parts[0].toLowerCase()]) {
+                            app.platform = parts[0];
+                            parts.shift();
+                            app.appId = parts[0];
+                          } else {
+                            app.platform = 'Android';
+                          }
+                          if (parts.length > 1) {
+                            app.appId = parts[0];
+                            app.country = parts[1];
+                          }
+                          return app;
+                        },
+                        this)
+                    .filter((app) => app.appId.indexOf('.') > 0));
       });
-    }); 
-    
+    });
+
   };
-  
-  this.sendReviewsToBackend = function(reviews){
-    
+
+  this.sendReviewsToBackend = function(reviews) {
+
     return new Promise((resolve, reject) => {
-      request({
-        url: config.mirrorgate_reviews_url,
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify(reviews)
-      }, (err, res, body) => {
-        if(err) {
-          return reject(err);
-        }
-        resolve(res);
-      });
-  
+      request(
+          {
+            url: config.mirrorgate_reviews_url,
+            method: 'POST',
+            headers: {
+              'content-type': 'application/json',
+            },
+            body: JSON.stringify(reviews)
+          },
+          (err, res, body) => {
+            if (err) {
+              return reject(err);
+            }
+            resolve(res);
+          });
+
     });
   };
-    
 }
 
 
