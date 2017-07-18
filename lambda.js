@@ -20,42 +20,37 @@ const CommentsService = require('./src/service/CommentsService');
 
 var service = new CommentsService();
 
-exports.handler = (event, context, callback) =>  {
-  
+exports.handler = (event, context, callback) => {
+
   context.callbackWaitsForEmptyEventLoop = false;
 
-service
-  .getGooglePlayComments()
-  .then( (appsReviews) => {
-    let reviews = [];
-    if(appsReviews) {
-      appsReviews.forEach(function(appReviews) {
-        appReviews.forEach(function(review) {
-          reviews.push(review);
-        });        
+  service.getComments()
+      .then((appsReviews) => {
+        let reviews = [];
+        if (appsReviews) {
+          appsReviews.forEach(function(appReviews) {
+            appReviews.forEach(function(review) { reviews.push(review); });
+          });
+        }
+        if (reviews.length > 0) {
+          console.log('Comments found: ' + reviews.length);
+          service.sendComments(reviews)
+              .then((res) => {
+                console.log(res);
+                callback(null, res);
+              })
+              .catch((err) => {
+                console.log(err);
+                callback(err);
+              });
+        } else {
+          console.log('There are not comments to send');
+          callback(null, 'There are not comments to send');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        callback(err);
       });
-    }
-    if(reviews.length > 0){
-      
-      console.log('Comments found: ' + reviews.length);
-      service
-        .sendComments(reviews)
-        .then( (res) => {
-          console.log(res);
-          callback(null, res);
-        })
-        .catch( (err) => {
-          console.log(err);
-          callback(err);
-        });
-    } else {
-      console.log('There are not comments to send');
-      callback(null, 'There are not comments to send');
-    }
-  })
-  .catch( (err) => {
-    console.log(err);
-    callback(err);
-  });
 
 };

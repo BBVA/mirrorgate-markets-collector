@@ -16,42 +16,49 @@
 
 const request = require('request');
 const APICaller = require('../caller/APICaller');
-const GooglePlayCaller = require('../caller/GooglePlayCaller');
+const AppInfoGatherer = require('../caller/AppInfoGatherer');
 
-var caller = new APICaller();
-var gpCaller = new GooglePlayCaller();
+module.exports = class CommentsService {
+  constructor() {
+    this.caller = new APICaller();
+    this.gatherer = new AppInfoGatherer();
+  }
 
-function CommentsService() {  
-   
-  this.getGooglePlayComments = function(){
-    
-    return caller
-      .getListOfApps()
-      .then( (apps) => {
-        console.log('Processing apps: ' + JSON.stringify(apps));
-
-        return Promise.all(apps.map((app) => {
-          console.log('Collecting from: ' + JSON.stringify(app.appId))
-          return gpCaller
-              .getReviews(app)
-              .then((data) => {
-                console.log('Data collected from ' + app.appId);
-                return data;
-              })
-              .catch( (err) => {
-                console.error('Error collecting from ' + app.appId);
-                console.error(err);
-                return [];
-              });
-        }));
+  getComments() {
+    return this.caller.getListOfApps().then((apps) => {
+      return Promise.all(apps.map((app) => {
+        console.log('Collecting from: ' + JSON.stringify(app));
+        return Promise
+            .all([
+              this.gatherer.getAppData(app)
+                  .then((data) => {
+                    console.log('App Data from ' + app.appId);
+                    return data;
+                  })
+                  .catch((err) => {
+                    console.error(
+                        'Error collecting app data from ' + app.appId);
+                    console.error(err);
+                    return [];
+                  }),
+              this.gatherer.getReviews(app)
+                  .then((data) => {
+                    console.log('Data collected from ' + app.appId);
+                    return data;
+                  })
+                  .catch((err) => {
+                    console.error('Error collecting from ' + app.appId);
+                    console.error(err);
+                    return [];
+                  }),
+            ])
+            .then((data) => {
+              return data.reduce((acum, data) => acum.concat(data || []), []);
+            });
+      }));
 
     });
   };
-  
-  this.sendComments = function(reviews) {
-    return caller.sendReviewsToBackend(reviews);
-  };
 
+  sendComments(reviews) { return this.caller.sendReviewsToBackend(reviews); };
 }
-
-module.exports = CommentsService;

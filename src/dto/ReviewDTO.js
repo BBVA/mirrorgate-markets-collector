@@ -14,36 +14,35 @@
  * limitations under the License.
  */
 
-function ReviewDTO(data) {
-  //Educated guess as time is not comming from the source
-  var now = new Date();
-  var date = new Date(data.date);
+module.exports = class ReviewDTO {
+  constructor(data) {
+    // Educated guess as time is not comming from the source
+    let now = new Date();
+    let date = new Date(data.date);
 
-  this.timestamp = (new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate(),
-    now.getHours(),
-    now.getMinutes(),
-    now.getSeconds()
-  )).getTime();
+    this.timestamp = (new Date(
+                          date.getFullYear(), date.getMonth(), date.getDate(),
+                          now.getHours(), now.getMinutes(), now.getSeconds()))
+                         .getTime();
 
-  if(!this.timestamp) {
-    this.timestamp = now.getTime();
+    if (!this.timestamp) {
+      this.timestamp = now.getTime();
+    }
+
+    this.commentId = data.id;
+    this.authorName = data.userName;
+    this.starrating = data.score;
+    this.comment = data.text;
+    this.commentTitle = data.title;
   }
 
-  this.commentId = data.id;
-  this.authorName = data.userName;
-  this.starrating = data.score;
-  this.comment = data.text;
-  this.platform = 'Android';
-  this.commentTitle = data.title;
-  
-  
-  this.setAppName = function(appName) {
+  setAppName(appName) {
     this.appname = appName;
-  };
-  
-}
+    return this;
+  }
 
-module.exports = ReviewDTO;
+  setPlatform(platform) {
+    this.platform = platform;
+    return this;
+  }
+}

@@ -11,6 +11,7 @@
   "author": "Enrique Daimiel <enrique.daimiel@bbva.com>",
   "license": "",
   "dependencies": {
+    "app-store-scraper": "^0.7.0",
     "google-play-scraper": "^3.3.1"
   },
   "devDependencies": {

@@ -1,15 +1,15 @@
-# MirrorGate Google Play Feedback Collector
+# MirrorGate Feedback Collector
 
 ![MirrorGate](./media/images/logo-ae.png)
 
-This Node application connects to a MirrorGate endpoint to get the id of the applications which comments and ratings must be recovered from Google Play.
+This Node application connects to a MirrorGate endpoint to get the id of the applications which comments and ratings must be recovered from Google Play and App Store.
 
 
 ## Configuring
 
 Check [config.js](./src/config/config.js) file to check for configuration options.
 
-The Google Play Collector works with the assumption that both the endpoint to recover the applications that need to be searched in the market and the endpoint to send the reviews are configured as environment variables.
+The Feedback Collector works with the assumption that both the endpoint to recover the applications that need to be searched in the market and the endpoint to send the reviews are configured as environment variables.
 ```
 MIRRORGATE_APPLIST_URL
 MIRRORGATE_REVIEWS_URL
