@@ -1,6 +1,6 @@
 #!groovy
 
-GOOGLE_PLAY_COLLECTOR_ARTIFACT = 'mirrorgate-google-play-collector.zip'
+MARKETS_COLLECTOR_ARTIFACT = 'mirrorgate-markets-collector.zip'
 
 node ('global') {
 
@@ -23,7 +23,7 @@ node ('global') {
         }
 
         stage('Publish on Jenkins') {
-      	    step([$class: "ArtifactArchiver", artifacts: "build/${GOOGLE_PLAY_COLLECTOR_ARTIFACT}", fingerprint: true])
+      	    step([$class: "ArtifactArchiver", artifacts: "build/${MARKETS_COLLECTOR_ARTIFACT}", fingerprint: true])
         }
 
     } catch(Exception e) {
