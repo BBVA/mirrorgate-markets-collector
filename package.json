@@ -12,7 +12,7 @@
   "license": "",
   "dependencies": {
     "app-store-scraper": "^0.7.0",
-    "google-play-scraper": "git+https://github.com/alfonso-presa/google-play-scraper.git#dev"
+    "google-play-scraper": "https://github.com/alfonso-presa/google-play-scraper.git#dev"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
