@@ -52,8 +52,11 @@ module.exports = class AppInfoGatherer {
 
     let scraper = scrapers[app.platform.toLowerCase()];
 
+    //Only android supports lang filtering
+    let langs = app.platform === 'Android' ? config.mirrorgate_langs : [undefined];
+
     return Promise
-        .all(config.mirrorgate_langs.map(
+        .all(langs.map(
             (lang) => scraper
                           .reviews({
                             appId: app.appId,
