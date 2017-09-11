@@ -66,10 +66,6 @@ module.exports = class AppInfoGatherer {
 
                             res.every((data) => {
 
-                              if (app.commentId === data.id) {
-                                return false;
-                              }
-
                               let review = new ReviewDTO(data)
                                                .setAppName(app.appName)
                                                .setPlatform(app.platform);
