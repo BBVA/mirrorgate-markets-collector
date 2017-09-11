@@ -17,6 +17,7 @@
 const request = require('request');
 const ReviewDTO = require('../dto/ReviewDTO');
 const config = require('../config/config');
+const moment = require('moment');
 
 let scrapers = {
   ios: require('app-store-scraper'),
@@ -65,12 +66,17 @@ module.exports = class AppInfoGatherer {
                             var reviews = [];
 
                             res.every((data) => {
+                                //For Android Store
+                                if(!(data.date instanceof Date)) {
+                                    moment.locale(lang);
+                                    data.date = moment.utc(data.date, 'LL').toDate();
+                                }
 
-                              let review = new ReviewDTO(data)
+                                let review = new ReviewDTO(data)
                                                .setAppName(app.appName)
                                                .setPlatform(app.platform);
-                              reviews.push(review);
-                              return true;
+                                reviews.push(review);
+                                return true;
                             });
                             return reviews;
                           })))
