@@ -34,7 +34,7 @@ module.exports = class AppInfoGatherer {
 
     let scraper = scrapers[app.platform.toLowerCase()];
 
-    return scraper.app({appId: app.appId, country: app.country}).then((res) => {
+    return scraper.app({appId: app.appId, country: app.country, cache: false}).then((res) => {
       return [{
         appname: app.appName,
         starrating: res.score,
@@ -63,7 +63,8 @@ module.exports = class AppInfoGatherer {
                             page: 0,
                             sort: scraper.sort.NEWEST,
                             lang: lang,
-                            country: app.country
+                            country: app.country,
+                            cache: false
                           })
                           .then((res) => {
                             var reviews = [];
