@@ -22,6 +22,7 @@ config.argv()
   .env()
   .file('config/config.json');
 
+let auth = new Buffer(config.get('MIRRORGATE_USER') + ':' + config.get('MIRRORGATE_PASSWORD').toString('base64'));
 let PLATFORMS = {android: 'Android', ios: 'IOS'};
 
 function APICaller() {
@@ -30,7 +31,12 @@ function APICaller() {
     let set = {};
 
     return new Promise((resolve, reject) => {
-      request(`${config.get('MIRRORGATE_ENDPOINT')}/api/applications`, (err, res, body) => {
+      request( {
+        url: `${config.get('MIRRORGATE_ENDPOINT')}/api/applications`,
+        headers: {
+          'Authorization' : `Basic ${auth}`
+        }
+      }, (err, res, body) => {
 
         if (err) {
           return reject(err);
@@ -76,6 +82,7 @@ function APICaller() {
             method: 'POST',
             headers: {
               'content-type': 'application/json',
+              'Authorization' : `Basic ${auth}`
             },
             body: JSON.stringify(reviews)
           },

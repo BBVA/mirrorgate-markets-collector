@@ -1,4 +1,6 @@
 {
   "MIRRORGATE_ENDPOINT": "http://localhost:8080/mirrorgate",
-  "MIRRORGATE_LANG_LIST": ["es","en"]
+  "MIRRORGATE_LANG_LIST": ["es","en"],
+  "MIRRORGATE_USER": "Atreyu",
+  "MIRRORGATE_PASSWORD": "MirrorGate"
 }
