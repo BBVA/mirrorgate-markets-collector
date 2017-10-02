@@ -36,25 +36,32 @@ function APICaller() {
           return reject(err);
         }
 
-        resolve(JSON.parse(body)
-                    .map(
-                        (app) => {
-                          var parts = app.appId.split('/');
-                          if (PLATFORMS[parts[0].toLowerCase()]) {
-                            app.platform = parts[0];
-                            parts.shift();
-                            app.appId = parts[0];
-                          } else {
-                            app.platform = 'Android';
-                          }
-                          if (parts.length > 1) {
-                            app.appId = parts[0];
-                            app.country = parts[1];
-                          }
-                          return app;
-                        },
-                        this)
-                    .filter((app) => app.appId.indexOf('.') > 0));
+        body = JSON.parse(body);
+        if(body.status >= 400) {
+          return reject({
+            statusCode: body.status,
+            statusMessage: body.error
+          });
+        }
+
+        resolve(body
+          .map((app) => {
+            var parts = app.appId.split('/');
+            if (PLATFORMS[parts[0].toLowerCase()]) {
+              app.platform = parts[0];
+              parts.shift();
+              app.appId = parts[0];
+            } else {
+              app.platform = 'Android';
+            }
+            if (parts.length > 1) {
+              app.appId = parts[0];
+              app.country = parts[1];
+            }
+            return app;
+          },
+          this)
+          .filter((app) => app.appId.indexOf('.') > 0));
       });
     });
 
@@ -75,6 +82,13 @@ function APICaller() {
           (err, res, body) => {
             if (err) {
               return reject(err);
+            }
+            body = JSON.parse(body);
+            if(body.status >= 400) {
+              return reject({
+                statusCode: body.status,
+                statusMessage: body.error
+              });
             }
             resolve(res);
           });
