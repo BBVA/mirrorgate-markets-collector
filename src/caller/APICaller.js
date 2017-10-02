@@ -15,7 +15,12 @@
  */
 
 const request = require('request');
-const config = require('../config/config');
+const fs = require('fs');
+const config = require('nconf');
+
+config.argv()
+  .env()
+  .file('config/config.json');
 
 let PLATFORMS = {android: 'Android', ios: 'IOS'};
 
@@ -25,7 +30,7 @@ function APICaller() {
     let set = {};
 
     return new Promise((resolve, reject) => {
-      request(config.mirrorgate_applist_url, (err, res, body) => {
+      request(`${config.get('MIRRORGATE_ENDPOINT')}/api/applications`, (err, res, body) => {
 
         if (err) {
           return reject(err);
@@ -60,7 +65,7 @@ function APICaller() {
     return new Promise((resolve, reject) => {
       request(
           {
-            url: config.mirrorgate_reviews_url,
+            url: `${config.get('MIRRORGATE_ENDPOINT')}/api/reviews`,
             method: 'POST',
             headers: {
               'content-type': 'application/json',
