@@ -1,6 +1,8 @@
 {
   "MIRRORGATE_ENDPOINT": "http://localhost:8080/mirrorgate",
   "MIRRORGATE_LANG_LIST": ["es","en"],
-  "MIRRORGATE_USER": "Atreyu",
-  "MIRRORGATE_PASSWORD": "MirrorGate"
+  "MIRRORGATE_USER": null,
+  "MIRRORGATE_PASSWORD": null,
+  "S3_BUCKET_NAME": null,
+  "S3_BUCKET_KEY": null
 }

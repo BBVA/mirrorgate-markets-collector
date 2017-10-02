@@ -22,15 +22,15 @@ config.argv()
   .env()
   .file('config/config.json');
 
-let auth = new Buffer(config.get('MIRRORGATE_USER') + ':' + config.get('MIRRORGATE_PASSWORD').toString('base64'));
 let PLATFORMS = {android: 'Android', ios: 'IOS'};
 
 function APICaller() {
   this.getListOfApps = function() {
 
-    let set = {};
-
     return new Promise((resolve, reject) => {
+
+      let auth = new Buffer(config.get('MIRRORGATE_USER') + ':' + config.get('MIRRORGATE_PASSWORD')).toString('base64');
+
       request( {
         url: `${config.get('MIRRORGATE_ENDPOINT')}/api/applications`,
         headers: {
@@ -42,15 +42,14 @@ function APICaller() {
           return reject(err);
         }
 
-        body = JSON.parse(body);
-        if(body.status >= 400) {
+        if(res.statusCode >= 400) {
           return reject({
-            statusCode: body.status,
-            statusMessage: body.error
+            statusCode: res.statusCode,
+            statusMessage: res.statusMessage
           });
         }
 
-        resolve(body
+        resolve(JSON.parse(body)
           .map((app) => {
             var parts = app.appId.split('/');
             if (PLATFORMS[parts[0].toLowerCase()]) {
@@ -76,6 +75,9 @@ function APICaller() {
   this.sendReviewsToBackend = function(reviews) {
 
     return new Promise((resolve, reject) => {
+
+      let auth = new Buffer(config.get('MIRRORGATE_USER') + ':' + config.get('MIRRORGATE_PASSWORD')).toString('base64');
+
       request(
           {
             url: `${config.get('MIRRORGATE_ENDPOINT')}/api/reviews`,
@@ -87,14 +89,15 @@ function APICaller() {
             body: JSON.stringify(reviews)
           },
           (err, res, body) => {
+
             if (err) {
               return reject(err);
             }
-            body = JSON.parse(body);
-            if(body.status >= 400) {
+
+            if(res.statusCode >= 400) {
               return reject({
-                statusCode: body.status,
-                statusMessage: body.error
+                statusCode: res.statusCode,
+                statusMessage: res.statusMessage
               });
             }
             resolve(res);

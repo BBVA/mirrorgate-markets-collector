@@ -12,6 +12,7 @@
   "license": "",
   "dependencies": {
     "app-store-scraper": "^0.7.0",
+    "aws-sdk": "^2.125.0",
     "google-play-scraper": "https://github.com/alfonso-presa/google-play-scraper.git#dev",
     "moment": "^2.18.1",
     "nconf": "^0.8.5"
