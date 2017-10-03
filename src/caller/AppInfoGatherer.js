@@ -16,8 +16,13 @@
 
 const request = require('request');
 const ReviewDTO = require('../dto/ReviewDTO');
-const config = require('../config/config');
 const moment = require('moment');
+const fs = require('fs');
+const config = require('nconf');
+
+config.argv()
+  .env()
+  .file('config/config.json');
 
 let scrapers = {
   ios: require('app-store-scraper'),
@@ -53,7 +58,7 @@ module.exports = class AppInfoGatherer {
     let scraper = scrapers[app.platform.toLowerCase()];
 
     //Only android supports lang filtering
-    let langs = app.platform === 'Android' ? config.mirrorgate_langs : [undefined];
+    let langs = app.platform === 'Android' ? config.get('MIRRORGATE_LANG_LIST') : [undefined];
 
     return Promise
         .all(langs.map(
