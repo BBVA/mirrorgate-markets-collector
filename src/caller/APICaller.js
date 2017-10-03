@@ -15,41 +15,58 @@
  */
 
 const request = require('request');
-const config = require('../config/config');
+const fs = require('fs');
+const config = require('nconf');
+
+config.argv()
+  .env()
+  .file('config/config.json');
 
 let PLATFORMS = {android: 'Android', ios: 'IOS'};
 
 function APICaller() {
   this.getListOfApps = function() {
 
-    let set = {};
-
     return new Promise((resolve, reject) => {
-      request(config.mirrorgate_applist_url, (err, res, body) => {
+
+      let auth = new Buffer(config.get('MIRRORGATE_USER') + ':' + config.get('MIRRORGATE_PASSWORD')).toString('base64');
+
+      request( {
+        url: `${config.get('MIRRORGATE_ENDPOINT')}/api/applications`,
+        headers: {
+          'Authorization' : `Basic ${auth}`
+        }
+      }, (err, res, body) => {
 
         if (err) {
           return reject(err);
         }
 
+        if(res.statusCode >= 400) {
+          return reject({
+            statusCode: res.statusCode,
+            statusMessage: res.statusMessage
+          });
+        }
+
         resolve(JSON.parse(body)
-                    .map(
-                        (app) => {
-                          var parts = app.appId.split('/');
-                          if (PLATFORMS[parts[0].toLowerCase()]) {
-                            app.platform = parts[0];
-                            parts.shift();
-                            app.appId = parts[0];
-                          } else {
-                            app.platform = 'Android';
-                          }
-                          if (parts.length > 1) {
-                            app.appId = parts[0];
-                            app.country = parts[1];
-                          }
-                          return app;
-                        },
-                        this)
-                    .filter((app) => app.appId.indexOf('.') > 0));
+          .map((app) => {
+            var parts = app.appId.split('/');
+            if (PLATFORMS[parts[0].toLowerCase()]) {
+              app.platform = parts[0];
+              parts.shift();
+              app.appId = parts[0];
+            } else {
+              app.platform = 'Android';
+            }
+            if (parts.length > 1) {
+              app.appId = parts[0];
+              app.country = parts[1];
+            }
+            return app;
+          },
+          this)
+          .filter((app) => app.appId.indexOf('.') > 0));
       });
     });
 
@@ -58,18 +75,30 @@ function APICaller() {
   this.sendReviewsToBackend = function(reviews) {
 
     return new Promise((resolve, reject) => {
+
+      let auth = new Buffer(config.get('MIRRORGATE_USER') + ':' + config.get('MIRRORGATE_PASSWORD')).toString('base64');
+
       request(
           {
-            url: config.mirrorgate_reviews_url,
+            url: `${config.get('MIRRORGATE_ENDPOINT')}/api/reviews`,
             method: 'POST',
             headers: {
               'content-type': 'application/json',
+              'Authorization' : `Basic ${auth}`
             },
             body: JSON.stringify(reviews)
           },
           (err, res, body) => {
+
             if (err) {
               return reject(err);
+            }
+
+            if(res.statusCode >= 400) {
+              return reject({
+                statusCode: res.statusCode,
+                statusMessage: res.statusMessage
+              });
             }
             resolve(res);
           });

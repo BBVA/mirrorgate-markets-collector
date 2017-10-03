@@ -15,42 +15,68 @@
  */
 
 /* Run as Lambda fucntion */
+const AWS = require('aws-sdk');
+const config = require('nconf');
 
 const CommentsService = require('./src/service/CommentsService');
 
 var service = new CommentsService();
 
+config.argv()
+  .env()
+  .file('config/config.json');
+
+function getComments(callback) {
+  return service
+    .getComments()
+    .then((appsReviews) => {
+      let reviews = [];
+      if (appsReviews) {
+        appsReviews.forEach(function(appReviews) {
+          appReviews.forEach(function(review) { reviews.push(review); });
+        });
+      }
+      if (reviews.length > 0) {
+        console.log(`Comments found: ${reviews.length}`);
+        service.sendComments(reviews)
+            .then((res) => {
+              console.log(res);
+              callback(null, res);
+            })
+            .catch((err) => {
+              console.log(`Error: ${JSON.stringify(err)}`);
+              callback(`Error: ${JSON.stringify(err)}`);
+            });
+      } else {
+        console.log('There are not comments to send');
+        callback(null, 'There are not comments to send');
+      }
+    })
+    .catch((err) => {
+      console.log(`Error: ${JSON.stringify(err)}`);
+      callback(`Error: ${JSON.stringify(err)}`);
+    });
+}
+
 exports.handler = (event, context, callback) => {
 
   context.callbackWaitsForEmptyEventLoop = false;
 
-  service.getComments()
-      .then((appsReviews) => {
-        let reviews = [];
-        if (appsReviews) {
-          appsReviews.forEach(function(appReviews) {
-            appReviews.forEach(function(review) { reviews.push(review); });
-          });
-        }
-        if (reviews.length > 0) {
-          console.log('Comments found: ' + reviews.length);
-          service.sendComments(reviews)
-              .then((res) => {
-                console.log(res);
-                callback(null, res);
-              })
-              .catch((err) => {
-                console.log(err);
-                callback(err);
-              });
-        } else {
-          console.log('There are not comments to send');
-          callback(null, 'There are not comments to send');
-        }
+  if(config.get('S3_BUCKET_NAME') && config.get('S3_BUCKET_KEY')) {
+    let s3 = new AWS.S3();
+    s3.getObject({
+      Bucket: config.get('S3_BUCKET_NAME'),
+      Key: config.get('S3_BUCKET_KEY')
+    }).promise()
+      .then((data) => {
+        data = JSON.parse(data.Body);
+        config.set('MIRRORGATE_USER', data.MIRRORGATE_USER);
+        config.set('MIRRORGATE_PASSWORD', data.MIRRORGATE_PASSWORD);
+        getComments(callback);
       })
-      .catch((err) => {
-        console.log(err);
-        callback(err);
-      });
+      .catch( err => console.error(`Error: ${JSON.stringify(err)}`));
+  } else {
+    getComments(callback);
+  }
 
 };

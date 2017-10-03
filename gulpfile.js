@@ -16,9 +16,9 @@
 
 const gulp = require('gulp');
 const zip = require('gulp-zip');
- 
+
 gulp.task('package', () =>
-  gulp.src(['index.js', 'lambda.js', 'src*/**/*', 'node_modules*/**/*'])
+  gulp.src(['index.js', 'lambda.js', 'src*/**/*', 'node_modules*/**/*', 'config*/config.json'])
     .pipe(zip('mirrorgate-markets-collector.zip'))
     .pipe(gulp.dest('build'))
 );
