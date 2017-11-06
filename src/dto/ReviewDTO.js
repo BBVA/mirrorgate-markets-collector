@@ -34,6 +34,7 @@ module.exports = class ReviewDTO {
     this.starrating = data.score;
     this.comment = data.text;
     this.commentTitle = data.title;
+    this.url = data.url;
   }
 
   setAppName(appName) {

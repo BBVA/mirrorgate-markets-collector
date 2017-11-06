@@ -45,7 +45,8 @@ module.exports = class AppInfoGatherer {
         starrating: res.score,
         platform: app.platform,
         amount: res.reviews,
-        country: app.country
+        country: app.country,
+        url: res.url
       }];
     });
   }
