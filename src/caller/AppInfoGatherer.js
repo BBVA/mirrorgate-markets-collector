@@ -70,7 +70,8 @@ module.exports = class AppInfoGatherer {
                             sort: scraper.sort.NEWEST,
                             lang: lang,
                             country: app.country,
-                            cache: false
+                            cache: false,
+                            throttle: 10,
                           })
                           .then((res) => {
                             var reviews = [];
