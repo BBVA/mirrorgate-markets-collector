@@ -29,6 +29,11 @@ let scrapers = {
   android: require('google-play-scraper')
 };
 
+let platforms = {
+  ios: 'IOS',
+  android: 'Android'
+}
+
 module.exports = class AppInfoGatherer {
   constructor() {}
 
@@ -39,11 +44,15 @@ module.exports = class AppInfoGatherer {
 
     let scraper = scrapers[app.platform.toLowerCase()];
 
-    return scraper.app({appId: app.appId, country: app.country, cache: false}).then((res) => {
+    return scraper.app({
+      appId: app.appId,
+      country: app.country,
+      cache: false
+    }).then((res) => {
       return [{
         appname: app.appName,
         starrating: res.score,
-        platform: app.platform,
+        platform: platforms[app.platform.toLowerCase()] || app.platform,
         amount: res.reviews,
         country: app.country,
         url: res.url
@@ -59,42 +68,41 @@ module.exports = class AppInfoGatherer {
     let scraper = scrapers[app.platform.toLowerCase()];
 
     //Only android supports lang filtering
-    let langs = app.platform === 'Android' ? config.get('MIRRORGATE_LANG_LIST') : [undefined];
+    let langs = app.platform.toLowerCase() === 'android' ? config.get('MIRRORGATE_LANG_LIST') : [undefined];
 
     return Promise
-        .all(langs.map(
-            (lang) => scraper
-                          .reviews({
-                            appId: app.appId,
-                            page: 0,
-                            sort: scraper.sort.NEWEST,
-                            lang: lang,
-                            country: app.country,
-                            cache: false,
-                            throttle: 10,
-                          })
-                          .then((res) => {
-                            var reviews = [];
+      .all(langs.map(
+        (lang) => scraper
+        .reviews({
+          appId: app.appId,
+          page: 0,
+          sort: scraper.sort.NEWEST,
+          lang: lang,
+          country: app.country,
+          cache: false,
+          throttle: 10,
+        })
+        .then((res) => {
+          var reviews = [];
 
-                            res.every((data) => {
-                                //For Android Store
-                                if(!(data.date instanceof Date)) {
-                                    moment.locale(lang);
-                                    data.date = moment.utc(data.date, 'LL').toDate();
-                                }
+          res.every((data) => {
+            //For Android Store
+            if (!(data.date instanceof Date)) {
+              moment.locale(lang);
+              data.date = moment.utc(data.date, 'LL').toDate();
+            }
 
-                                let review = new ReviewDTO(data)
-                                               .setAppName(app.appName)
-                                               .setPlatform(app.platform);
-                                reviews.push(review);
-                                return true;
-                            });
-                            return reviews;
-                          })))
-        .then(
-            (langReviews) => langReviews.reduce(
-                (all, langReviews) =>
-                    langReviews.reduce((all, review) => all.push(review) && all, all),
-                []));
+            let review = new ReviewDTO(data)
+              .setAppName(app.appName)
+              .setPlatform(platforms[app.platform.toLowerCase()] || app.platform);
+            reviews.push(review);
+            return true;
+          });
+          return reviews;
+        })))
+      .then(
+        (langReviews) => langReviews.reduce(
+          (all, langReviews) =>
+          langReviews.reduce((all, review) => all.push(review) && all, all), []));
   }
 }
