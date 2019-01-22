@@ -16,9 +16,9 @@
   "license": "Apache-2.0",
   "dependencies": {
     "app-store-scraper": "^0.15.3",
-    "aws-sdk": "^2.388.0",
+    "aws-sdk": "^2.392.0",
     "google-play-scraper": "^6.2.2",
-    "moment": "^2.23.0",
+    "moment": "^2.24.0",
     "nconf": "^0.10.0"
   },
   "devDependencies": {
