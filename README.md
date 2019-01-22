@@ -14,7 +14,7 @@ The Feedback Collector works with the assumption that both the endpoint to recov
 MIRRORGATE_APPLIST_URL
 MIRRORGATE_REVIEWS_URL
 ```
-  
+
 If not, default endpoints defined in properties will be used.
 ```
 mirrorgate_reviews_url = 'http://localhost:8080/mirrorgate/api/reviews',
@@ -31,7 +31,7 @@ a comma separated list of two letter lang references (i.e. `fr,es,en`)
 First install dependencies
 
 ```sh
-  npm i 
+  npm i
 ```
 
 Then run `index.js` with node
@@ -40,10 +40,10 @@ Then run `index.js` with node
   node index.js
 ```
 
-or with npm 
+or with npm
 
 ```sh
-  npm run start
+  npm start
 ```
 
 
@@ -54,7 +54,7 @@ First package script zip with the following gulp task
 ```sh
 ./node_modules/gulp/bin/gulp.js package
 ```
-or with npm 
+or with npm
 
 ```sh
 npm run package
