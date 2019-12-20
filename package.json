@@ -15,14 +15,14 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "app-store-scraper": "^0.15.3",
-    "aws-sdk": "^2.395.0",
-    "google-play-scraper": "^6.2.2",
-    "moment": "^2.24.0",
-    "nconf": "^0.10.0"
+    "app-store-scraper": "0.16.2",
+    "aws-sdk": "2.594.0",
+    "google-play-scraper": "7.1.1",
+    "moment": "2.24.0",
+    "nconf": "0.10.0"
   },
   "devDependencies": {
-    "gulp": "^4.0.0",
-    "gulp-zip": "^4.2.0"
+    "gulp": "4.0.2",
+    "gulp-zip": "5.0.1"
   }
 }
