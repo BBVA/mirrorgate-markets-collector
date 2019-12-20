@@ -12,12 +12,10 @@ node ('global') {
 
         stage('Build') {
             sh """
-                #Commented until stop using git for dependencies
-                #docker-compose -p \${BUILD_TAG} run -u \$(id -u) install
-                npm install
+                docker-compose -p \${BUILD_TAG} run -u \$(id -u) install
             """
         }
-        
+
         stage('Package Zip') {
             sh """
                 docker-compose -p \${BUILD_TAG} run -u \$(id -u) package
@@ -25,7 +23,7 @@ node ('global') {
         }
 
         stage('Publish on Jenkins') {
-      	    step([$class: "ArtifactArchiver", artifacts: "build/${MARKETS_COLLECTOR_ARTIFACT}", fingerprint: true])
+      	    step([$class: "ArtifactArchiver", artifacts: ".serverless/${MARKETS_COLLECTOR_ARTIFACT}", fingerprint: true])
         }
 
     } catch(Exception e) {

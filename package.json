@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "package": "./node_modules/gulp/bin/gulp.js package",
+    "package": "serverless package",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "BBVA",
@@ -22,7 +22,6 @@
     "nconf": "0.10.0"
   },
   "devDependencies": {
-    "gulp": "4.0.2",
-    "gulp-zip": "5.0.1"
+    "serverless": "1.60.1"
   }
 }
