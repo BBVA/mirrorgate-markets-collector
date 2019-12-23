@@ -26,7 +26,9 @@ node ('global') {
       	    step([$class: "ArtifactArchiver", artifacts: ".serverless/${MARKETS_COLLECTOR_ARTIFACT}", fingerprint: true])
         }
 
-    } catch(Exception e) {
-        throw e;
+    } finally {
+        sh """
+            docker-compose -p \${BUILD_TAG} down --volumes
+        """
     }
 }
