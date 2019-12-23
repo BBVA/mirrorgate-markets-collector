@@ -1,4 +1,3 @@
 node_modules
-build
+.serverless
 .vscode
-package-lock.json

@@ -1,0 +1,28 @@
+service: mirrorgate-markets-collector
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+
+package:
+  individually: true
+  include:
+    - config/**
+    - src/**
+    - index.js
+    - lambda.js
+  exclude:
+    - media/**
+    - .gitignore
+    - .editorconfig
+    - .jshintrc
+    - ./**.md
+    - ./**.json
+    - ./**.yml
+    - LICENSE
+    - Jenkinsfile
+    - .vscode/**
+
+functions:
+  mirrorgate-markets-collector:
+    handler: lambda.handler
