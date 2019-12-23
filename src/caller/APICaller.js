@@ -29,7 +29,7 @@ function APICaller() {
 
     return new Promise((resolve, reject) => {
 
-      let auth = new Buffer(config.get('MIRRORGATE_USER') + ':' + config.get('MIRRORGATE_PASSWORD')).toString('base64');
+      let auth = Buffer.from(config.get('MIRRORGATE_USER') + ':' + config.get('MIRRORGATE_PASSWORD')).toString('base64');
 
       request( {
         url: `${config.get('MIRRORGATE_ENDPOINT')}/api/applications`,
@@ -76,7 +76,7 @@ function APICaller() {
 
     return new Promise((resolve, reject) => {
 
-      let auth = new Buffer(config.get('MIRRORGATE_USER') + ':' + config.get('MIRRORGATE_PASSWORD')).toString('base64');
+      let auth = Buffer.from(config.get('MIRRORGATE_USER') + ':' + config.get('MIRRORGATE_PASSWORD')).toString('base64');
 
       request(
           {
