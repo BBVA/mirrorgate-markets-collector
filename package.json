@@ -16,12 +16,12 @@
   "license": "Apache-2.0",
   "dependencies": {
     "app-store-scraper": "0.16.2",
-    "aws-sdk": "2.594.0",
-    "google-play-scraper": "7.1.1",
+    "aws-sdk": "2.660.0",
+    "google-play-scraper": "7.1.2",
     "moment": "2.24.0",
     "nconf": "0.10.0"
   },
   "devDependencies": {
-    "serverless": "1.60.1"
+    "serverless": "1.68.0"
   }
 }
